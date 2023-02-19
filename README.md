@@ -16,8 +16,15 @@ Furthermore, we design an effective learning strategy with both pre-training (i.
 fine-tuning (i.e., ***Retrieval on Abstract Subgraphs*** and ***Reasoning on Retrieved Subgraphs***) based on the unified architecture.
 With this unified architecture, the proposed learning method can effectively enhance the sharing and transferring of relevance information between the two stages.
 
-![The overview of the unified model architecture of UniKGQA, consisting of two modules, i.e., semantic matching, and matching information propagation.](asset/model.png "model")
-![The comparison of our UniKGQA and other different methods.](asset/comparison.png "comparison")
+<p align="center">
+  <img src="asset/model.png" alt="UniKGQA architecture" width="600">
+  <br>
+  <b>Figure</b>: The overview of the unified model architecture of UniKGQA, consisting of two modules, i.e., semantic matching, and matching information propagation.
+</p>
+
+[comment]: <> (![The overview of the unified model architecture of UniKGQA, consisting of two modules, i.e., semantic matching, and matching information propagation.]&#40;asset/model.png "model"&#41;)
+
+[comment]: <> (![The comparison of our UniKGQA and other different methods.]&#40;asset/comparison.png "comparison"&#41;)
 
 ## Environments Setting
 We implement our approach based on Pytorch and Huggingface Transformers.
