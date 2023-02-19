@@ -19,20 +19,17 @@ With this unified architecture, the proposed learning method can effectively enh
 <p align="center">
   <img src="asset/model.png" alt="UniKGQA architecture" width="1000">
   <br>
-  <b>Figure</b>: The overview of the unified model architecture of UniKGQA.
+  <b>Figure 1</b>: The overview of the unified model architecture of UniKGQA.
 </p>
 
-<p align="half">
-  <img src="asset/comparison.png" alt="comparison" width="500">
+<p align="center">
+  <img src="asset/comparison.png" alt="comparison" width="400">
   <br>
-  <b>Figure</b>: The comparison of our UniKGQA and other different methods. <img src="asset/learning_strategy.png" alt="learning" width="500">
+  <b>Figure 2</b>: The comparison of our UniKGQA and other different methods.
+  <img src="asset/learning_strategy.png" alt="learning" width="400">
   <br>
-  <b>Figure</b>: The learning strategy of UniKGQA.
+  <b>Figure 3</b>: The learning strategy of UniKGQA.
 </p>
-
-[comment]: <> (![The overview of the unified model architecture of UniKGQA, consisting of two modules, i.e., semantic matching, and matching information propagation.]&#40;asset/model.png "model"&#41;)
-
-[comment]: <> (![The comparison of our UniKGQA and other different methods.]&#40;asset/comparison.png "comparison"&#41;)
 
 ## Environments Setting
 We implement our approach based on Pytorch and Huggingface Transformers.
