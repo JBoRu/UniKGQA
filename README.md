@@ -22,18 +22,6 @@ With this unified architecture, the proposed learning method can effectively enh
   <b>Figure 1</b>: The overview of the unified model architecture of UniKGQA.
 </p>
 
-<p align="center">
-  <img src="asset/comparison.png" alt="comparison" width="400">
-  <br>
-  <b>Figure 2</b>: The comparison of our UniKGQA and other different methods.
-</p>
-
-<p align="center">
-  <img src="asset/learning_strategy.png" alt="learning" width="400">
-  <br>
-  <b>Figure 3</b>: The learning strategy of UniKGQA.
-</p>
-
 ## Environments Setting
 We implement our approach based on Pytorch and Huggingface Transformers.
 We export the detailed environment settings in the freeze.yml, and you can install them with the command line as follows:
