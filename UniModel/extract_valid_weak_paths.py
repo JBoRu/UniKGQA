@@ -1,18 +1,8 @@
-import os
 import argparse
-import random
-
-import json
-
 import numpy as np
-import pandas as pd
-from tqdm import tqdm
-from copy import deepcopy
-import multiprocessing
-from SPARQLWrapper.SPARQLExceptions import EndPointInternalError
 import sys
+
 sys.path.append("..")
-from KnowledgeBase.KG_api import KnowledgeGraph
 from KnowledgeBase.sparql_executor import *
 
 

@@ -1,1 +1,0 @@
-python ./multi-gpu-runner/keep_looking_gpu_missions_queue.py -i ./start_training.sh -t 1 -n 3 -o ./start_training.log -p "['0','1','2','3','4','5','6','7']"

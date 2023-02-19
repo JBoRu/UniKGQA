@@ -42,38 +42,40 @@ You can see the *KnowledgeBase* directory for details.
 **Note: these two processes are time-consuming, so we strongly suggest you download our preprocessed data and KG dump from [here]().**
 
 ## Pre-training
-We utilize the shortest path between topic entities and answer entities in KG to pre-training the PLM for question-relation semantic matching.
+We utilize the shortest path between topic entities and answer entities in KG as weak supervision signals to pre-train the PLM for question-relation semantic matching.
 
 ### Preparing weakly supervised pre-training data
-First, we should extract the shortest relation path in KG. Here, we give an example of the WebQSP dataset.
-Second, we filter some relation paths whose answer precision is lower than a specified threshold (we use 0.1 here).
-Third, we regard the relations in the above-extracted relation paths as positive relations and randomly select other relations as negative relations.
-Finally, we can get the pre-training data. Each sample format is *(question, positive relations, negative relations)*.
-You can construct these data as follows:
+1. We should extract the shortest relation paths for each sample. 
+2. We filter some relation paths whose answer precision is lower than a specified threshold (we use 0.1 here).  
+3. We regard the relations in the above-extracted relation paths as positive relations and randomly select other relations as negative relations.
+4. We can get the pre-training data. Each sample format is *(question, positive relations, negative relations)*.
+
+We solve each step with a specific .py file and combine them into a .sh script that you can directly run to construct the pre-training data as follows:
     
     cd ./UniModel
-    
-    sh prepare_weak_super_pre_train_data.sh
+    sh question_relation_pretrain_data_construction.sh
 
-**Note: this process is time-consuming, so we strongly suggest you download our pre-processed training data from [here]().**
+**Note: this process is time-consuming, so we strongly suggest you download our pre-processed training data from [here]().**  
+Then unzip it and move the *data/* directory below *UniModel/*.
 
 ### Pre-training with Question-Relation Matching
 Based on the publicly released code of SimCSE, we pre-train the PLM with contrastive learning as follows:
     
     cd ./UniModel
 
-    CUDA_VISIBLE_DEVICES=1,2,3 python3 -W ignore -m torch.distributed.launch \
-    --nproc_per_node 3 --master_port 1237 ./retriever/train.py --model_name_or_path roberta-base \
-    --train_file ./data/webqsp/new.train.rels.retri.data.neg_50.0.1.csv \
-    --eval_file ./data/webqsp/new.dev.rels.retri.data.neg_50.0.1.csv \
-    --output_dir ./retriever/results/new_webqsp_rel_retri_1 --per_device_train_batch_size 10 --gradient_accumulation_steps 2 \
-    --learning_rate 5e-5 --do_train --num_train_epochs 15 --do_eval --evaluation_strategy steps --eval_steps 300 \
-    --save_steps 300 --save_total_limit 1 --load_best_model_at_end --metric_for_best_model eval_hits1 --pooler_type cls \
+    CUDA_VISIBLE_DEVICES=6,7,8,9 python3 -W ignore -m torch.distributed.launch \
+    --nproc_per_node 4 --master_port 1237 ./simcse_retriever/train.py --model_name_or_path /mnt/jiangjinhao/hg_face/roberta-base \
+    --train_file ./data/webqsp/train_rels-mh_3hop-neg_50.csv \
+    --eval_file ./data/webqsp/dev_rels-mh_3hop-neg_50.csv \
+    --output_dir ./retriever/results/webqsp_rel_retri --per_device_train_batch_size 10 --gradient_accumulation_steps 2 \
+    --learning_rate 5e-5 --do_train --num_train_epochs 10 --do_eval --evaluation_strategy steps --eval_steps 120 \
+    --save_steps 120 --save_total_limit 1 --load_best_model_at_end --metric_for_best_model eval_hits1 --pooler_type cls \
     --overwrite_output_dir --temp 0.05
 
-    python ./retriever/simcse_to_huggingface.py --path ./retriever/results/new_webqsp_rel_retri_1/
+    python ./retriever/simcse_to_huggingface.py --path ./retriever/results/webqsp_rel_retri/
 
-**Note: we almost do not fine-tune any hyper-parameters, such as learning rate, temperature, and the number of negatives.**
+**Note: we almost do not fine-tune any hyper-parameters, such as learning rate, temperature, and the number of negatives.
+You can also directly download our pre-trained model checkpoint from [here]().**
 
 ## Fine-tuning
 After pre-training the PLM, we initialize the UniKGQA with the pre-trained parameters.
