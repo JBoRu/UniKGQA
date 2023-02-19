@@ -26,6 +26,9 @@ With this unified architecture, the proposed learning method can effectively enh
   <img src="asset/comparison.png" alt="comparison" width="400">
   <br>
   <b>Figure 2</b>: The comparison of our UniKGQA and other different methods.
+</p>
+
+<p align="center">
   <img src="asset/learning_strategy.png" alt="learning" width="400">
   <br>
   <b>Figure 3</b>: The learning strategy of UniKGQA.
