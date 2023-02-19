@@ -17,9 +17,18 @@ fine-tuning (i.e., ***Retrieval on Abstract Subgraphs*** and ***Reasoning on Ret
 With this unified architecture, the proposed learning method can effectively enhance the sharing and transferring of relevance information between the two stages.
 
 <p align="center">
-  <img src="asset/model.png" alt="UniKGQA architecture" width="600">
+  <img src="asset/model.png" alt="UniKGQA architecture" width="1000">
   <br>
-  <b>Figure</b>: The overview of the unified model architecture of UniKGQA, consisting of two modules, i.e., semantic matching, and matching information propagation.
+  <b>Figure</b>: The overview of the unified model architecture of UniKGQA.
+</p>
+
+<p align="half">
+  <img src="asset/comparison.png" alt="comparison" width="500">
+  <br>
+  <b>Figure</b>: The comparison of our UniKGQA and other different methods.
+    <img src="asset/learning_strategy.png" alt="learning" width="500">
+  <br>
+  <b>Figure</b>: The learning strategy of UniKGQA.
 </p>
 
 [comment]: <> (![The overview of the unified model architecture of UniKGQA, consisting of two modules, i.e., semantic matching, and matching information propagation.]&#40;asset/model.png "model"&#41;)
