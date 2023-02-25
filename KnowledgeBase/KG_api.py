@@ -389,31 +389,29 @@ class KnowledgeGraph(object):
             inst_rels = [self.id2rel[r] for r in all_rels]
             return inst_rels, const_rels
 
-    def deduce_subgraph_by_abstract_sg(self, kg, topic_entity, max_deduced_triples, subgraph_paths):
-        if kg == "sparse":
-            entities, triples = set(), set()
-            topic_entity = [self.ent2id[topic_entity]]
-            subgraph_paths = [{idx: {"chain": [self.rel2id[rel] for rel in rel_const["chain"]],
-                                     "const": [self.rel2id[rel] for rel in rel_const["const"]]}
-                               for idx, rel_const in path.items()} for path in subgraph_paths]
-            sg = self.sparse_kg.deduce_subgraph_by_abstract_sg(topic_entity, max_deduced_triples, subgraph_paths)
-            if sg is not None:
-                entities_id, triples_id = sg
-            else:
-                return (entities, triples)
-            for eid in entities_id:
-                entities.add(self.id2ent[eid])
-            for tri in triples_id:
-                h, r, t = tri
-                h = self.id2ent[h]
-                t = self.id2ent[t]
-                r = self.id2rel[r]
-                triples.add((h, r, t))
-            return (tuple(entities), tuple(triples))
+    def deduce_subgraph_by_abstract_sg(self, topic_entity, max_deduced_triples, subgraph_paths):
+        entities, triples = set(), set()
+        topic_entity = [self.ent2id[topic_entity]]
+        subgraph_paths = [{idx: {"chain": [self.rel2id[rel] for rel in rel_const["chain"]],
+                                 "const": [self.rel2id[rel] for rel in rel_const["const"]]}
+                           for idx, rel_const in path.items()} for path in subgraph_paths]
+        sg = self.sparse_kg.deduce_subgraph_by_abstract_sg(topic_entity, max_deduced_triples, subgraph_paths)
+        if sg is not None:
+            entities_id, triples_id = sg
+        else:
+            return (entities, triples)
+        for eid in entities_id:
+            entities.add(self.id2ent[eid])
+        for tri in triples_id:
+            h, r, t = tri
+            h = self.id2ent[h]
+            t = self.id2ent[t]
+            r = self.id2rel[r]
+            triples.add((h, r, t))
+        return (tuple(entities), tuple(triples))
 
     def get_subgraph_within_khop(self, qid, task_name, split, question, weak_gold_rels_per_hop, tpe, cpes, max_hop,
-                                 tokenizer, model,
-                                 topk, filter_score, not_filter_rels):
+                                 tokenizer, model, topk, filter_score, not_filter_rels):
         try:
             tpe_id = self.ent2id[tpe]
         except Exception as e:
@@ -431,6 +429,5 @@ class KnowledgeGraph(object):
                 continue
         abs_triples_per_hop, reserved_rel_and_score, all_const_rels, abs_cpes_id = self.sparse_kg.get_subgraph_within_khop(
             qid, task_name, split, question, tpe_id, list(cpes_id), max_hop, weak_gold_rels_per_hop, self.id2rel,
-            self.rel2id,
-            tokenizer, model, topk, filter_score, not_filter_rels)
+            self.rel2id, tokenizer, model, topk, filter_score, not_filter_rels)
         return abs_triples_per_hop, reserved_rel_and_score, all_const_rels, abs_cpes_id

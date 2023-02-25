@@ -1,9 +1,0 @@
-transformers==4.2.1
-scipy
-datasets
-pandas
-scikit-learn
-prettytable
-gradio
-torch
-setuptools

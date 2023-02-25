@@ -20,14 +20,19 @@ def extract_shortest_paths(short_paths, min_precision, filter_order):
     second_score = ordered_pre_score_list[1] if len(ordered_pre_score_list) >= 2 else first_score
     third_score = ordered_pre_score_list[2] if len(ordered_pre_score_list) >= 3 else second_score
 
-    if filter_order == 1:
+    if filter_order == 0:
+        real_min_pre = min_precision
+    elif filter_order == 1:
         real_min_pre = first_score
     elif filter_order == 2:
         real_min_pre = second_score
     elif filter_order == 3:
         real_min_pre = third_score
     else:
-        real_min_pre = min_precision
+        if first_score < min_precision:
+            real_min_pre = first_score
+        else:
+            real_min_pre = min_precision
 
     selected_paths = []
     for p_s in paths:
@@ -101,8 +106,6 @@ def get_answers_from_shortest_paths(ori_datasets_dict, all_samples, shortest_pat
     new_samples = []
     for sample in all_samples:
         sample_id = sample['ID']
-        # if sample_id not in ['WebQTrn-12.P0','WebQTrn-17.P0','WebQTrn-30.P0','WebQTrn-235.P0','WebQTrn-337.P0']:
-        #     continue
 
         if split != "test" and sample_id not in shortest_paths_dict:
             continue
@@ -223,16 +226,6 @@ if __name__ == '__main__':
         shortest_paths_dataset = [json.loads(l) for l in all_lines]
         shortest_paths_dict = {l["ID"]: l for l in shortest_paths_dataset}
     print('Load shortest paths from %s' % all_shortest_path)
-
-    # with open(all_output_path, "a+") as f:
-    #     for line in all_abs_sg_data_lines:
-    #         f.write(line.strip("\n") + "\n")
-    # print("Write %d abstract subgraph data to %s." % (len(all_abs_sg_data_lines), all_output_path))
-
-    # with open(all_output_path, "r") as f:
-    #     all_lines = f.readlines()
-    #     all_abs_sg_data = [json.loads(line) for line in all_lines]
-    # print("Totally load %d abstract subgraph data." % (len(all_abs_sg_data)))
 
     for split in args.split_list:
         print("Starting extract %s set." % (split))

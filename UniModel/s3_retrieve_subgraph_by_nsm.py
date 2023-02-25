@@ -220,7 +220,7 @@ def extract_rel_from_retri_sg_tris(topk_paths):
 
 def creat_nsm_model(args):
     import sys
-    path = './nsm_retriever/'
+    path = './nsm/'
     sys.path.append(path)
     from NSM.train.trainer_nsm import Trainer_KBQA
 
@@ -254,6 +254,7 @@ def creat_nsm_model(args):
     # nsm_args["fixed_plm_for_relation_encoding"] = False
     # nsm_args["encode_relation_separate"] = False
     nsm_args["overwrite_cache"] = False
+    nsm_args["data_cache"] = args.input_data_cache_abs_path
     trainer = Trainer_KBQA(args=nsm_args)
     trainer.load_ckpt(nsm_checkpoint_path)
     return trainer
@@ -265,11 +266,8 @@ def infer_relations_from_kb(idx, device, args, datasets, abs_sg_data_dict, id2re
 
     print("Start PID %d for processing %d-%d" % (os.getpid(), idx*split_index, (idx+1)*split_index))
 
-    tokenizer = None
-    rel_retri_model = None
-
     sg_retri_model = creat_nsm_model(args)
-    kg = KnowledgeGraph(args.dense_kg_source, (args.sparse_kg_source_path, args.sparse_ent_type_path),
+    kg = KnowledgeGraph(args.sparse_kg_source_path, args.sparse_ent_type_path,
                         args.sparse_ent2id_path, args.sparse_rel2id_path)
 
     final_topk = args.final_topk
@@ -279,14 +277,12 @@ def infer_relations_from_kb(idx, device, args, datasets, abs_sg_data_dict, id2re
     with open(cur_op, "w") as f:
         for data in tqdm(datasets, total=len(datasets), desc="PID: %d"%(os.getpid())):
             qid = data['ID']
-            # if qid not in ["WebQTrn-47.P0","WebQTrn-196.P0"]:
-            #     continue
             split = data['Split']
             if qid in abs_sg_data_dict:
                 abs_sg_data = abs_sg_data_dict[qid]
             else:
                 if split == "test":
-                    print("Qid:%s doesn't have any abstract subgraph. We skip it"%(qid))
+                    print("Qid:%s doesn't have any abstract subgraph. We skip this test example"%(qid))
                 continue
 
             answers = []
@@ -328,7 +324,7 @@ def infer_relations_from_kb(idx, device, args, datasets, abs_sg_data_dict, id2re
 
             relations_set = extract_rel_from_retri_sg_tris(topk_path_rels_and_const)
 
-            subgraph = kg.deduce_subgraph_by_abstract_sg("sparse", tpe, max_deduced_triples, topk_path_rels_and_const)  # (list[nodes],list[triplets])
+            subgraph = kg.deduce_subgraph_by_abstract_sg(tpe, max_deduced_triples, topk_path_rels_and_const)  # (list[nodes],list[triplets])
 
             subgraph_ent, inst_triples = subgraph
             relations_set_from_final = set()
@@ -361,16 +357,16 @@ def _parse_args():
     parser.add_argument('--arg_path', default=None)
     parser.add_argument('--relation2id_path', default=None, type=str)
     parser.add_argument('--entity2id_path', default=None, type=str)
+    parser.add_argument('--input_data_cache_abs_path', default=None, type=str)
     parser.add_argument('--split_list', default=["train", "dev", "test"], nargs="+")
     parser.add_argument('--device', default=[0, 1, 2, 3, 4, 5, 6, 7], nargs="+", help='the gpu device')
     parser.add_argument('--overwrite', action="store_true")
+    parser.add_argument('--debug', action="store_true")
     parser.add_argument('--num_pro_each_device', default=3, type=int)
     parser.add_argument('--max_num_processes', default=1, type=int)
     parser.add_argument('--final_topk', default=10, type=int, help='final num of  retrieved paths')
     parser.add_argument('--max_hop', default=4, type=int, help='max hop of paths')
     parser.add_argument('--max_deduced_triples', default=200, type=int, help='max triples for one path')
-    parser.add_argument('--dense_kg_source', default="virtuoso", help='the KG source (ex. virtuoso, triples, ckpt)')
-    parser.add_argument('--dense_kg_source_path', default=None, help='the KG source path for triples or ckpt types')
     parser.add_argument('--sparse_kg_source_path', default=None, help='the sparse triples file')
     parser.add_argument('--sparse_ent_type_path', default=None, help='the file of entities type of sparse triples')
     parser.add_argument('--sparse_ent2id_path', default=None, help='the sparse ent2id file')
@@ -401,11 +397,13 @@ if __name__ == '__main__':
         ori_dataset = [json.loads(l) for l in all_lines]
     print('Load original data from %s' % ori_path)
 
-    all_sg_lines = []
     inp_path = args.input_path
     with open(inp_path, "r") as f:
         all_lines = f.readlines()
-        all_sg_lines.extend([json.loads(l) for l in all_lines])
+        if args.debug:
+            all_sg_lines = [json.loads(l) for l in all_lines[0:100]]
+        else:
+            all_sg_lines = [json.loads(l) for l in all_lines]
     abs_sg_data_dict = {d["ID"]: d for d in all_sg_lines}
     print('Load abstract subgraphs from %s' % inp_path)
 
@@ -425,7 +423,6 @@ if __name__ == '__main__':
     else:
         ready_data = ori_dataset
 
-
     device_list = args.device
     device_list = sum([device_list]*args.num_pro_each_device, [])
     num_process = min(len(device_list), num_process)
@@ -433,14 +430,16 @@ if __name__ == '__main__':
     split_index = len(ready_data) // num_process + 1
     new_samples, ans_recall, rel_recall = [], [], []
 
-    p = multiprocessing.Pool(num_process)
-    result_for_process = []
-    for cuda, idx in zip(device_list, range(num_process)):
-        select_data = ready_data[idx*split_index: (idx+1)*split_index]
-        p.apply_async(infer_relations_from_kb, args=(idx, cuda, args, select_data, abs_sg_data_dict, id2rel, id2ent, out_path))
-    p.close()
-    p.join()
-    print("All child process over!")
-
-    # deug
-    # infer_relations_from_kb(0, 6, args, ready_data, abs_sg_data_dict, id2rel, id2ent, out_path)
+    if args.debug:
+        # deug
+        infer_relations_from_kb(0, 6, args, ready_data, abs_sg_data_dict, id2rel, id2ent, out_path)
+    else:
+        p = multiprocessing.Pool(num_process)
+        result_for_process = []
+        for cuda, idx in zip(device_list, range(num_process)):
+            select_data = ready_data[idx * split_index: (idx + 1) * split_index]
+            p.apply_async(infer_relations_from_kb,
+                          args=(idx, cuda, args, select_data, abs_sg_data_dict, id2rel, id2ent, out_path))
+        p.close()
+        p.join()
+        print("All child process over!")

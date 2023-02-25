@@ -516,10 +516,7 @@ class KnowledgeGraphSparse(object):
                     cur_ins_tails.append(seed_set)
                 exclude_rels = set()
 
-                if task_name == "kgc":
-                    const_rels = set()
-                else:
-                    const_rels = self.get_const_rels(triples, cpes, exclude_rels)
+                const_rels = self.get_const_rels(triples, cpes, exclude_rels)
                 const_rels_str = [id2rel[rel] for rel in const_rels]
                 all_const_rels.update(const_rels_str)
                 candidate_rels = set(triples[:, 1].tolist()) - exclude_rels - const_rels
@@ -536,8 +533,6 @@ class KnowledgeGraphSparse(object):
 
                 if split != 'test':  # This is a trick only used for train/dev set.
                     weak_label_rels = weak_gold_rels_per_hop[i] & set(candidate_rels_str)
-                    # if len(weak_gold_rels_per_hop[i]) > 0 and len(weak_label_rels) == 0:
-                    #     print("Qid:%s doesn't retrieve the gold relations."%(qid))
                     for rel in weak_label_rels:
                         if rel not in filtered_rels_str:
                             filtered_rels_str.append(rel)
@@ -586,7 +581,6 @@ class KnowledgeGraphSparse(object):
         import torch
         cur_relations = list(cur_relations)
         all_relation_list = cur_relations
-        query = query.replace("[MASK]", tokenizer.mask_token)
         query_lined_list = [query]
         q_emb = self.get_texts_embeddings(query_lined_list, tokenizer, model).unsqueeze(1)  # (1,1,hid)
         target_emb = self.get_texts_embeddings(all_relation_list, tokenizer, model).unsqueeze(0)  # (1,bs,hid)

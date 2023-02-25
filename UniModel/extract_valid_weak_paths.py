@@ -18,16 +18,20 @@ def construct_contrastive_pos_neg_paths(sample):
     second_score = ordered_pre_score_list[1] if len(ordered_pre_score_list) >= 2 else 0.0
     third_score = ordered_pre_score_list[2] if len(ordered_pre_score_list) >= 3 else 0.0
 
-    if filter_order == 1:
+    if filter_order == 0:
+        real_min_pre = min_precision
+    elif filter_order == 1:
         real_min_pre = first_score
     elif filter_order == 2:
         real_min_pre = second_score
     elif filter_order == 3:
         real_min_pre = third_score
-    elif filter_order == -1:
-        real_min_pre = min_precision
     else:
-        real_min_pre = min(first_score, min_precision)
+        if first_score < min_precision:
+            real_min_pre = first_score
+        else:
+            real_min_pre = min_precision
+        # real_min_pre = min(first_score, min_precision)
     filtered_paths = [p for p in paths if p[2] >= real_min_pre]
 
     return filtered_paths
