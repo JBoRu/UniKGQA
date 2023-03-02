@@ -5,8 +5,8 @@ import numpy as np
 from tqdm import tqdm
 import sys
 
-# output_dir = '/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/subgraph/'
-output_dir = '/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/subgraph/'
+output_dir = '/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/subgraph/'
+# output_dir = '/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/subgraph/'
 start = time.time()
 with open(output_dir+'ent2id.pickle', 'rb') as f:
     ent2id = pickle.load(f)

@@ -38,12 +38,12 @@ def find_entity(sparql_str):
     return ent_set
 
 # data can be downloaded from https://github.com/lanyunshi/KBQA-GST
-# data_folder = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp"
-# data_file = ["train.jsonl", "dev.jsonl", "test.jsonl"]
-# output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_step0.json"
-data_folder = "/home/jiangjinhao/work/QA/UniKBQA/UniModel/data/cwq"
+data_folder = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp"
 data_file = ["train.jsonl", "dev.jsonl", "test.jsonl"]
-output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_step0.json"
+output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_step0.json"
+# data_folder = "/home/jiangjinhao/work/QA/UniKBQA/UniModel/data/cwq"
+# data_file = ["train.jsonl", "dev.jsonl", "test.jsonl"]
+# output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_step0.json"
 f_out = open(output_file, "w")
 for file in data_file:
     filename = os.path.join(data_folder, file)

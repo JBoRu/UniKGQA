@@ -5,6 +5,8 @@ import os
 import sys
 from copy import deepcopy
 
+import json
+
 sys.path.append("..")
 from KnowledgeBase.KG_api import KnowledgeGraph
 from KnowledgeBase.sparql_executor import *
@@ -93,7 +95,11 @@ def extract_abstract_sg_from_kb(idx, device, args, datasets, shortest_paths_dict
         model.cuda()
 
     cur_op = output_path + "_" + str(idx)
-    with open(cur_op, "w") as f:
+    if not args.overwrite:
+        mode = "a+"
+    else:
+        mode = "w"
+    with open(cur_op, mode) as f:
         for data in tqdm(datasets, total=len(datasets), desc="PID: %d" % (os.getpid())):
             qid = data["ID"]
 
@@ -138,6 +144,7 @@ def _parse_args():
     parser.add_argument('--output_path', required=True)
     parser.add_argument('--model_path', default=None)
     parser.add_argument('--not_filter_rels', action="store_true")
+    parser.add_argument('--overwrite', action="store_true")
     parser.add_argument('--debug', action="store_true")
     parser.add_argument('--device', default=[0, 1, 2, 3, 4, 5, 6, 7], nargs="+", help='the gpu device')
     parser.add_argument('--num_pro_each_device', default=3, type=int)
@@ -171,8 +178,7 @@ if __name__ == '__main__':
             ori_dataset = [json.loads(l) for l in all_lines[:100]]
         else:
             ori_dataset = [json.loads(l) for l in all_lines]
-    ready_data = ori_dataset
-    print('Load %d original samples from %s' % (len(ready_data), ori_path))
+    print('Load %d original samples from %s' % (len(ori_dataset), ori_path))
 
     inp_path = args.input_path
     with open(inp_path, "r") as f:
@@ -180,6 +186,37 @@ if __name__ == '__main__':
         inp_dataset = [json.loads(l) for l in all_lines]
         inp_dataset_dict = {l["ID"]: l for l in inp_dataset}
     print('Load %d shortest paths from %s' % (len(inp_dataset), inp_path))
+
+    alrea_qid = []
+    if not args.overwrite:
+        alrea_dir = os.path.dirname(out_path)
+        alrea_path_name = out_path.split("/")[-1]
+        alrea_dir_path_list = os.listdir(alrea_dir)
+        alrea_path = [n for n in alrea_dir_path_list if alrea_path_name in n]
+        print(alrea_path)
+        for ap in alrea_path:
+            with open(os.path.join(alrea_dir, ap), "r") as f:
+                already_lines = f.readlines()
+                already_lines_valid = []
+                for l in already_lines:
+                    try:
+                        already_lines_valid.append(json.loads(l))
+                    except Exception as e:
+                        # logging.exception(e)
+                        print("Error")
+                        continue
+                # already_lines = [json.loads(l) for l in already_lines]
+                alrea_qid.extend([l['ID'] for l in already_lines_valid])
+    alrea_count = len(alrea_qid)
+    print("There are %d samples have been already processed." % alrea_count)
+    if len(alrea_qid) > 0:
+        ready_data = []
+        for data in ori_dataset:
+            if data['ID'] not in alrea_qid:
+                ready_data.append(data)
+    else:
+        ready_data = ori_dataset
+    print("There are %d samples need to be processed." % (len(ready_data)))
 
     if args.debug:
         # debug

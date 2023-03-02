@@ -2,10 +2,10 @@ import json
 import sys
 
 
-input_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_step0.json"
-output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_seed.txt"
-# input_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_step0.json"
-# output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_seed.txt"
+# input_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_step0.json"
+# output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_seed.txt"
+input_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_step0.json"
+output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_seed.txt"
 # input_file = sys.argv[1]
 # output_file = sys.argv[2]
 f = open(input_file)

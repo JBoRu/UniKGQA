@@ -5,8 +5,9 @@ This is the official PyTorch implementation for the paper:
 
 *Updates:*
 1. - [x] Update camera-ready code repo!
-2. - [ ] Update camera-ready paper!
-3. - [ ] Upload our results to the leaderboard!
+2. - [ ] Upload checkpoint!
+3. - [ ] Update camera-ready paper!
+4. - [ ] Upload our results to the leaderboard!
 
 ## Overview
 We propose **UniKGQA**, which stands for **Uni**fied retrieval and reasoning for solving multi-hop **Q**uestion **A**nswering over **K**nowledge **G**raph.
@@ -27,19 +28,16 @@ We implement our approach based on Pytorch and Huggingface Transformers.
 We export the detailed environment settings in the freeze.yml, and you can install them with the command line as follows:
 
     conda env create -f freeze.yml
+There are some directories (e.g., *data/*, *ckpt/*) that will be used in different workplace. 
+Therefore, a good solution is to create a directory and softly link it to other place:
+    
+    ln -s -F directory_name/ new_dirctory_name
+**Note: you should use the absolute path for directory_name and new_dirctory_name.**
 
-## Preparing the datasets
-We preprocess the datasets following NSM.
-You can see the *Preprocess* directory for details.
+## Preprocessing
+Before starting the experiments, you should first prepare the datasets and Knowledge Graph. You can see the *./Preprocess/README.md* for details.
 
-## Preparing the KG
-For WebQSP and CWQ, we use the whole freebase as the knowledge base.
-We strongly suggest that you follow Freebase-Setup to build a Virtuoso for the Freebase dataset.
-Following NSM and GraftNet, to improve the data accessing efficiency when training, we extract a 2-hop topic-centric subgraph for each question in WebQSP and a 4-hop topic-centric subgraph for each question in CWQ to dump the necessary facts.
-Then, we access these necessary facts efficiently with sparse matrix multiplication based on the publicly released code of SubgraphRetrieval.
-You can see the *KnowledgeBase* directory for details.
-
-**Note: these two processes are time-consuming, so we strongly suggest you download our preprocessed data and KG dump from [here]().**
+**Note: the preprocessing are time-consuming, so we strongly suggest you download our preprocessed data and KG dump from [here]().**
 
 ## Pre-training
 We utilize the shortest path between topic entities and answer entities in KG as weak supervision signals to pre-train the PLM for question-relation semantic matching.
@@ -86,7 +84,7 @@ Second, we fine-tune our UniKGQA reasoning model (UniKGQA-ret) on the abstract s
 Note we initialize the PLM module of UniKGQA-ret with the pre-trained parameters and fix them during the fine-tuning.
 You can train the UniKGQA-ret as follows:
     
-    cd ./UniModel/nsm_retriever
+    cd ./UniModel/
     sh fine_tune_for_retrieval_on_abstract_subgraph.sh
 
 **Note: we almost do not fine-tune any hyper-parameters, such as learning rate, temperature, and the number of negatives.

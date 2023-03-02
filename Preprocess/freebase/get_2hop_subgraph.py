@@ -80,12 +80,12 @@ if __name__ == "__main__":
     print("Load CVT", time.time() - st)
     # seed_file = sys.argv[1]
     # output_path = sys.argv[2]
-    seed_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_seed.txt"
-    output_path = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related//cwq/subgraph/"
-    kb_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/manual_fb_filter.txt"
-    # seed_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_seed.txt"
-    # output_path = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/subgraph/"
+    # seed_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_seed.txt"
+    # output_path = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related//cwq/subgraph/"
     # kb_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/manual_fb_filter.txt"
+    seed_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_seed.txt"
+    output_path = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/subgraph/"
+    kb_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/manual_fb_filter.txt"
     output_hop1 = os.path.join(output_path, "subgraph_hop1.txt")
     # if os.path.exists(output_hop1):
     #     print("Skip 1st hop")

@@ -2,8 +2,7 @@ import json
 import os
 
 NSM_dp = "./data/webqsp/webqsp_NSM/split_simple.json"
-
-
+data_path = "./data/webqsp/"
 
 ori_dp = os.path.join(data_path, "webqsp_ori", "WebQSP.split.json")
 split_dp = os.path.join(data_path, "split.jsonl")
@@ -23,9 +22,9 @@ with open(split_dp, "w") as f:
         sd = ori_data_dict[qid]
         sd = json.dumps(sd)
         all_split_lines.append(sd)
-    print("Total %d"%(len(all_split_lines)))
+    print("Total %d" % (len(all_split_lines)))
     for line in all_split_lines:
-        f.write(line+"\n")
+        f.write(line + "\n")
 
 path = "data/webqsp/data/WebQSP.test.json"
 out = "data/webqsp/data/WebQSP.split.test.jsonl"
@@ -34,4 +33,4 @@ with open(path, "r") as f:
     data = data["Questions"]
     with open(out, "w") as fo:
         for l in data:
-            fo.write(json.dumps(l)+"\n")
+            fo.write(json.dumps(l) + "\n")
