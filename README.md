@@ -5,8 +5,8 @@ This is the official PyTorch implementation for the paper:
 
 *Updates:*
 1. - [x] Update camera-ready code repo!
-2. - [ ] Upload checkpoint!
-3. - [ ] Update camera-ready paper!
+2. - [x] Update camera-ready paper!
+3. - [ ] Upload all data and model checkpoints!
 4. - [ ] Upload our results to the leaderboard!
 
 ## Overview
