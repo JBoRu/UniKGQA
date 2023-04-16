@@ -1,5 +1,7 @@
 import json
 import os
+import sys
+
 from tqdm import tqdm
 import re
 
@@ -37,13 +39,13 @@ def find_entity(sparql_str):
                 print("The %s entity has not be identified"%(item))
     return ent_set
 
+use_entity_from_sparsql = sys.argv[1]
+
 # data can be downloaded from https://github.com/lanyunshi/KBQA-GST
-data_folder = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp"
-data_file = ["train.jsonl", "dev.jsonl", "test.jsonl"]
-output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_step0.json"
-# data_folder = "/home/jiangjinhao/work/QA/UniKBQA/UniModel/data/cwq"
-# data_file = ["train.jsonl", "dev.jsonl", "test.jsonl"]
-# output_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_step0.json"
+data_folder = sys.argv[2]
+data_file = eval(sys.argv[3])
+output_file = sys.argv[4]
+
 f_out = open(output_file, "w")
 for file in data_file:
     filename = os.path.join(data_folder, file)
@@ -52,30 +54,34 @@ for file in data_file:
         all_data = f_in.readlines()
         data = [json.loads(l) for l in all_data]
         for q_obj in tqdm(data, total=len(data)):
-            ID = q_obj["QuestionId"]
+            ID = q_obj["QuestionID"] if "QuestionID" in q_obj else q_obj["ID"]
             answer_list_new = []
             ent_list = []
-            for parse in q_obj["Parses"]:
-                for answer_obj in parse["Answers"]:
-                    new_obj = {}
-                    new_obj["kb_id"] = answer_obj["AnswerArgument"].strip()
-                    new_obj["text"] = answer_obj["EntityName"]
-                    answer_list_new.append(new_obj)
+            if "Parses" in q_obj:
+                parse = q_obj["Parses"][0]
+            else:
+                parse = q_obj["Parse"]
+            for answer_obj in parse["Answers"]:
+                new_obj = {}
+                new_obj["kb_id"] = answer_obj["AnswerArgument"].strip()
+                new_obj["text"] = answer_obj["EntityName"]
+                answer_list_new.append(new_obj)
 
-                tpes = parse["TopicEntityMid"]
-                if tpes is None:
-                    print("Qid:%s doesn't have any topic entities."%(ID))
-                    continue
-                elif isinstance(tpes, str):
-                    ent_list.append({"kb_id": tpes, "text": tpes})
-                elif isinstance(tpes, list):
-                    # print("Qid: %s topice entities: %s" % (ID, tpes))
-                    for ent in tpes:
-                        ent_list.append({"kb_id": ent, "text": ent})
-                else:
-                    print("Qid: %s topice entities: %s" % (ID, tpes))
-                    continue
+            tpes = parse["GoldEntityMid"] if "GoldEntityMid" in parse else parse["TopicEntityMid"]
+            if tpes is None:
+                print("Qid:%s doesn't have any topic entities."%(ID))
+                continue
+            elif isinstance(tpes, str):
+                ent_list.append({"kb_id": tpes, "text": tpes})
+            elif isinstance(tpes, list):
+                # print("Qid: %s topice entities: %s" % (ID, tpes))
+                for ent in tpes:
+                    ent_list.append({"kb_id": ent, "text": ent})
+            else:
+                print("Qid: %s topice entities: %s" % (ID, tpes))
+                continue
 
+            if use_entity_from_sparsql == '1':
                 sparql_str = parse["Sparql"]
                 ent_set = find_entity(sparql_str)
                 for ent in ent_set:

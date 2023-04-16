@@ -59,6 +59,7 @@ def fetch_triple_1hop(kb_file, seed_file, output, cvt_nodes, cvt_hop=True):
     f_out.close()
     return cvt_set
 
+
 def filter_ent_from_triple(in_file, out_file):
     f = open(in_file)
     ent_set = set()
@@ -74,6 +75,7 @@ def filter_ent_from_triple(in_file, out_file):
         f.write(ent + "\n")
     f.close()
 
+
 if __name__ == "__main__":
     st = time.time()
     cvt_nodes = load_cvt()
@@ -83,9 +85,9 @@ if __name__ == "__main__":
     # seed_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/cwq_seed.txt"
     # output_path = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related//cwq/subgraph/"
     # kb_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/manual_fb_filter.txt"
-    seed_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_seed.txt"
-    output_path = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/subgraph/"
-    kb_file = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/manual_fb_filter.txt"
+    seed_file = sys.argv[1]  # "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/webqsp_seed_test.txt"
+    output_path = sys.argv[2]  # "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/subgraph_test/"
+    kb_file = sys.argv[3]  # "/mnt/jiangjinhao/PLM4KBQA/freebase/manual_fb_filter.txt"
     output_hop1 = os.path.join(output_path, "subgraph_hop1.txt")
     # if os.path.exists(output_hop1):
     #     print("Skip 1st hop")

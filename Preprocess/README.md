@@ -1,13 +1,29 @@
 ### Preparing the datasets
-Besides the origin datasets , we also leverage the preprocessed datasets from [NSM](https://github.com/RichardHGL/WSDM2021_NSM).
-You should first download these datasets from [here]().
-After downloading, you should unzip it and move the files to *data/*.
-Then, you can perform the above command to prepare the dataset:
+You should first download the original datasets from [here](https://www.microsoft.com/en-us/download/details.aspx?id=52763)
+After downloading, you should unzip it and move the files to *data/webqsp/webqsp_ori/*.
+Besides the origin datasets , we also leverage the preprocessed datasets from [NSM](https://drive.google.com/drive/folders/1qRXeuoL-ArQY7pJFnMpNnBu0G-cOz6xv).
+After downloading, you should unzip it and move the files to *data/webqsp/webqsp_NSM/*.
+The directory structure should be:
+
+- data
+    - webqsp
+        - webqsp_NSM
+            - dev_simple.json
+            - test_simple.json
+            - train_simple.json
+            - ...
+        - webqsp_ori
+            - WebQSP.train.json
+            - WebQSP.test.json
+            - ...
+
+Then, you can perform the follow command to prepare the dataset:
 
     cd dataset/
     python convert_webqsp_to_unify_format.py
 
 **Note: some paths name may be modified according to your situation. We strongly recommend downloading our pre-processed data from [here]().**
+After downloading, you should unzip it and move the files to *data/*.
 
 ### Preparing the KG
 For WebQSP and CWQ, we use the whole freebase as the knowledge base.
@@ -17,10 +33,6 @@ Then, we access these necessary facts efficiently with sparse matrix multiplicat
 The following scripts aims to extract topic-centric subgraphs from the original KG and convert them to sparse KG.
     
     cd freebase/
-    python extract_samples.py
-    python get_seed_set.py
-    get_2hop_subgraph.py
-    convert_subgraph_to_int.py
-    build_ent_type_ary.py
+    sh ./run_process.sh
 
 **Note: some paths name may be modified according to your situation. It is time-consuming, and we strongly recommend downloading our pre-processed data from [here]().**

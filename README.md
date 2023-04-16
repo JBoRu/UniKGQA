@@ -8,6 +8,7 @@ This is the official PyTorch implementation for the paper:
 2. - [x] Update camera-ready paper!
 3. - [ ] Upload all data and model checkpoints!
 4. - [ ] Upload our results to the leaderboard!
+Several researchers have contacted me regarding the processing of intermediate data. I apologize for the complexity of the procedure and the inconvenience it has caused. To address this issue, I plan to provide an updated and simplified operational script within the next month. However, if you require emergence assistance, please feel free to reach out to me via email, and I can provide you with the specific data you need.
 
 ## Overview
 We propose **UniKGQA**, which stands for **Uni**fied retrieval and reasoning for solving multi-hop **Q**uestion **A**nswering over **K**nowledge **G**raph.

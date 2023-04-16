@@ -216,7 +216,14 @@ if __name__ == '__main__':
     for path in all_split_paths:
         with open(path, "r") as f:
             split_abs_sg_data_lines = f.readlines()
-            split_abs_sg_data = [json.loads(l) for l in split_abs_sg_data_lines]
+            split_abs_sg_data = []
+            for l in split_abs_sg_data_lines:
+                try:
+                    l_json = json.loads(l)
+                except Exception as e:
+                    print("Json parsing error!")
+                    continue
+                split_abs_sg_data.append(l_json)
             all_abs_sg_data.extend(split_abs_sg_data)
     print("Totally load %d abstract subgraph data." % (len(all_abs_sg_data)))
 

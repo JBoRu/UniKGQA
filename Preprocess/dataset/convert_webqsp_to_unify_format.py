@@ -25,12 +25,3 @@ with open(split_dp, "w") as f:
     print("Total %d" % (len(all_split_lines)))
     for line in all_split_lines:
         f.write(line + "\n")
-
-path = "data/webqsp/data/WebQSP.test.json"
-out = "data/webqsp/data/WebQSP.split.test.jsonl"
-with open(path, "r") as f:
-    data = json.load(f)
-    data = data["Questions"]
-    with open(out, "w") as fo:
-        for l in data:
-            fo.write(json.dumps(l) + "\n")

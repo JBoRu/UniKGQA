@@ -5,7 +5,7 @@ import numpy as np
 from tqdm import tqdm
 import sys
 
-output_dir = '/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/subgraph/'
+output_dir = sys.argv[1] # '/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/webqsp/subgraph_test/'
 # output_dir = '/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/cwq/subgraph/'
 start = time.time()
 with open(output_dir+'ent2id.pickle', 'rb') as f:
@@ -24,7 +24,7 @@ def is_ent(tp_str):
     return False
 
 
-# 我们将实体切分为三种类型, "值","普通实体","CVT实体",
+# 我们将实体切分为三种类型, "值", "普通实体", "CVT实体",
 # 我们将上述实体分别定为 1, 2, 3
 ent_type_ary = np.zeros(len(ent2id))
 

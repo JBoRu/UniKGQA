@@ -3,10 +3,11 @@ import sys
 filter_domain = ['music.release', 'authority.musicbrainz', '22-rdf-syntax-ns#type', 'book.isbn',
                  'common.licensed_object', 'tv.tv_series_episode', 'type.namespace', 'type.content',
                  'type.permission', 'type.object.key', 'type.object.permission', 'type.type.instance',
-                 'topic_equivalent_webpage', 'dataworld.freeq', 'common.topic.description']
+                 'topic_equivalent_webpage', 'dataworld.freeq', 'common.topic.description',
+                 'common.topic.notable_types', 'base.kwebbase.kwtopic.has_sentences']
 filter_set = set(filter_domain)
-input = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/FastRDFStore_data/fb_en.txt"
-output = "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/NSM_related/manual_fb_filter.txt"
+input = sys.argv[1]  # "/mnt/jiangjinhao/PLM4KBQA/data/Freebase/FastRDFStore_data/fb_en.txt"
+output = sys.argv[2]  # "/mnt/jiangjinhao/PLM4KBQA/freebase/manual_fb_filter.txt"
 f_in = open(input)
 f_out = open(output, "w")
 num_line = 0

@@ -1,11 +1,29 @@
 #!/bin/bash
 
-task_name="webqsp"
-batch_size=40
-gradient_accumulation_steps=1
-test_batch_size=400
-max_hop=3
-num_step=3
+#task_name="webqsp"
+#batch_size=40
+#gradient_accumulation_steps=1
+#test_batch_size=400
+#max_hop=3
+#num_step=3
+#num_epoch=100
+#patience=15
+#filter_score=0.0
+#entity_dim=768
+#word_dim=300
+#kg_dim=384
+#kge_dim=100
+#topk=15
+#max_num_triples=1000
+#linear_dropout=0.1
+#device=6
+
+task_name="cwq"
+batch_size=20
+gradient_accumulation_steps=4
+test_batch_size=50
+max_hop=4
+num_step=4
 num_epoch=100
 patience=15
 filter_score=0.0
@@ -13,10 +31,10 @@ entity_dim=768
 word_dim=300
 kg_dim=384
 kge_dim=100
-topk=15
-max_num_triples=1000
+topk=10
+max_num_triples=2000
 linear_dropout=0.1
-device=6
+device=8
 
 CUDA_VISIBLE_DEVICES=${device} python3 ./nsm/main_nsm.py --linear_dropout ${linear_dropout} --log_steps 50 \
 --model_path ./simcse_retriever/results/${task_name}_rel_retri --agent_type PLM --instruct_model PLM \
@@ -28,4 +46,4 @@ CUDA_VISIBLE_DEVICES=${device} python3 ./nsm/main_nsm.py --linear_dropout ${line
 --eval_every 1 --encode_type --eps 0.95 --num_epoch ${num_epoch} --patience ${patience} --use_self_loop \
 --plm_lr 1e-5 --lr 5e-4 --word_emb_file word_emb_300d.npy --loss_type kl --reason_kb \
 --data_cache ./data/${task_name}/abs_sg_for_retri.cache --relation2id abs_sub_relations.txt --entity2id abs_sub_entities.txt \
---simplify_model --fixed_plm_for_relation_encoding --fixed_plm_for_query_encoding --fix_all_plm --overwrite_cache
+--simplify_model --fixed_plm_for_relation_encoding --fixed_plm_for_query_encoding --fix_all_plm

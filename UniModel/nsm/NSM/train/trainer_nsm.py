@@ -236,10 +236,10 @@ class Trainer_KBQA(object):
         eval_every = self.args['eval_every']
         # eval_acc = inference(self.model, self.valid_data, self.entity2id, self.args)
         if self.local_rank <= 0:
-            self.save_ckpt("debug")
-            self.save_args("args")
-            filename = os.path.join(self.args['checkpoint_dir'], "{}-debug.ckpt".format(self.args['experiment_name']))
-            self.load_ckpt(filename)
+            # self.save_ckpt("debug")
+            # self.save_args("args")
+            # filename = os.path.join(self.args['checkpoint_dir'], "{}-debug.ckpt".format(self.args['experiment_name']))
+            # self.load_ckpt(filename)
             eval_f1, eval_h1 = self.evaluate(self.valid_data, self.test_batch_size, mode="teacher")
             self.logger.info("Before finetune: Dev F1: {:.4f}, H1: {:.4f}".format(eval_f1, eval_h1))
             test_f1, test_h1 = self.evaluate(self.test_data, self.test_batch_size, mode="teacher")
