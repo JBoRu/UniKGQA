@@ -22,7 +22,7 @@ Then, you can perform the follow command to prepare the dataset:
     cd dataset/
     python convert_webqsp_to_unify_format.py
 
-**Note: some paths name may be modified according to your situation. We strongly recommend downloading our pre-processed data from [here]().**
+**Note: some paths name may be modified according to your situation. We strongly recommend downloading our pre-processed data from [here](https://drive.google.com/file/d/1plbFei-BvtcurgTNhHcrjD1N71t_5LVT/view?usp=share_link).**
 After downloading, you should unzip it and move the files to *data/*.
 
 ### Preparing the KG
