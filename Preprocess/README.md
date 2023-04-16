@@ -35,4 +35,4 @@ The following scripts aims to extract topic-centric subgraphs from the original 
     cd freebase/
     sh ./run_process.sh
 
-**Note: some paths name may be modified according to your situation. It is time-consuming, and we strongly recommend downloading our pre-processed data from [here]().**
+**Note: some paths name may be modified according to your situation. It is time-consuming, and we strongly recommend downloading our pre-processed data from [here](https://drive.google.com/file/d/1plbFei-BvtcurgTNhHcrjD1N71t_5LVT/view?usp=share_link).**
